@@ -1,30 +1,67 @@
-// client/src/components/App.js
-import { useState, useEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import LocationPage from './components/LocationPage'
+import Navigation from './components/Navigation'
+import Login from "./components/Login";
+import UserHome from "./components/UserHome";
+import AddNewLocationForm from './components/AddNewLocationForm'
+import { Switch, Route } from 'react-router-dom'
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
+const App = () => {
+  const [user, setUser] = useState(null)
+  const [locations, setLocations] = useState([])
+
+  const [searchLocations, setSearchLocations] = useState('')
+
+  function changeSearch(event){
+    setSearchLocations(event.target.value)
+
+  }
+
+  const filteredLocations = locations.filter(location => location.city.toLowerCase().includes(searchLocations.toLowerCase()))
 
   useEffect(() => {
-    fetch("/hello")
+    fetch("/locations")
       .then((r) => r.json())
-      .then((data) => setCount(data.count));
+      .then(setLocations)
+  }, [])
+
+  const handleAddLocations = newLocation => {
+      const updatedLocationArray = [...locations, newLocation]
+      setLocations(updatedLocationArray)
+  }
+
+  useEffect(() => {
+    fetch("/me").then((response) => {
+      if (response.ok) {
+        response.json().then((user) => setUser(user));
+      }
+    });
   }, []);
 
-  return (
-    <BrowserRouter>
+  if (!user) return <Login onLogin={setUser}/>
+
+    return  (
       <div className="App">
-        <Switch>
-          <Route path="/testing">
-            <h1>Test Route</h1>
-          </Route>
-          <Route path="/">
-            <h1>Page Count: {count}</h1>
-          </Route>
-        </Switch>
+        
+        <Navigation setUser={setUser}/>
+        <main>
+          <Switch>
+            <Route path="/home">
+                <UserHome user={user}/>
+            </Route>
+            <Route path="/locations">
+                <LocationPage locations={filteredLocations}
+                  changeSearch={changeSearch} />
+            </Route>
+            <Route path="/new">
+                <AddNewLocationForm handleAddLocations={handleAddLocations}/>
+            </Route>
+          </Switch> 
+        </main>   
       </div>
-    </BrowserRouter>
-  );
+  )
+
 }
 
-export default App;
+export default App

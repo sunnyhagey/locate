@@ -1,8 +1,9 @@
 .App {
   text-align: center;
+  background-color: black;
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -22,7 +23,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
 .App-link {
   color: #61dafb;
@@ -35,4 +36,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.locationinformation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.search-bar {
+  padding: 25px 25px 25px 25px;
+}
+
+.locationcard {
+  padding: 25px 25px 25px 25px;
+}
+
+.new-location-segment {
+  padding: 25px 25px 25px 25px;
 }
